@@ -1,10 +1,10 @@
-# continualized multi-memory gradient ascent
-# 4th-order Runge-Kutta
-# forward- and backward-time dynamics
-# (m,nx,ny)=(3,1,0): m=action number, nx=X's memory length, ny=Y's memory length
-# output textfile here as cMMGA_210_test.txt
-#
-
+"""
+continualized multi-memory gradient ascent
+4th-order Runge-Kutta
+forward- and backward-time dynamics
+(m,nx,ny)=(3,1,0): m=action number, nx=X's memory length, ny=Y's memory length
+output textfile here as cMMGA_210_test.txt
+"""
 
 import numpy as np
 

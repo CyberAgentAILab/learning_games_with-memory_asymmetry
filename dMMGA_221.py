@@ -1,8 +1,8 @@
-# discretized multi-memory gradient ascent
-# (m,nx,ny)=(2,2,1): m=action number, nx=X's memory length, ny=Y's memory length
-# output textfile here as dMMGA_221_test.txt
-#
-
+"""
+discretized multi-memory gradient ascent
+(m,nx,ny)=(2,2,1): m=action number, nx=X's memory length, ny=Y's memory length
+output textfile here as dMMGA_221_test.txt
+"""
 
 import numpy as np
 
