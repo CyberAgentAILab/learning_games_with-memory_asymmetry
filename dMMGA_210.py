@@ -4,7 +4,6 @@
 #
 
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 det = 1  # 1: random initial state, 2: memory-less initial state
