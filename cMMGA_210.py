@@ -15,7 +15,8 @@ if init == 1:
 elif init == 2:
     scale = 0.1
     x_vc, y = 0.5 + scale * np.random.randn(4), 0.5 + scale * np.random.randn()
-u_vc, v_vc = np.array([+1, -1, -1, +1]), np.array([-1, +1, +1, -1])
+uo_vc, vo_vc = [+1, -1, -1, +1], [-1, +1, +1, -1]
+u_vc, v_vc = np.array(uo_vc), np.array(vo_vc)
 dmin = 10**-4
 
 
@@ -121,7 +122,7 @@ def main(x_vc, y):
     # output textfile
     txt = open("cMMGA_210_test.txt", "w")
     txt.write("#time:[NdT] (Runge-Kutta 4) = " + str([NdT]) + "\n")
-    txt.write("#payoff:u = " + str([u_vc]) + ", v = " + str([v_vc]) + "\n")
+    txt.write("#payoff:u = " + str([uo_vc]) + ", v = " + str([vo_vc]) + "\n")
     txt.write("#strategies: one-memory vs zero-memory" + "\n")
     txt.write("#whole dynamics from source to sink" + "\n")
     txt.write("#t, xT_vc(4), yT(1), u(1), v(1)" + "\n")
