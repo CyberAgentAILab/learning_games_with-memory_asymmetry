@@ -62,7 +62,6 @@ def EIGEN_VECTOR(M_mt):
         p_vc = pn_vc
     return p_vc
 
-
 # matrix generation
 def M_MATRIX(x_vc, y_vc):
     M_mt = np.array([])
@@ -72,83 +71,86 @@ def M_MATRIX(x_vc, y_vc):
     M_mt = np.transpose(np.reshape(M_mt, (9, 9)))
     return M_mt
 
-
-# output textfile
-txt = open("dMMGA_310_test.txt", "w")
-txt.write(
-    "#time:[Tmax,NdT] (Discretized Multi-memory Gradient Ascent) = "
-    + str([Tmax, NdT])
-    + "\n"
-)
-txt.write(
-    "#detailed of gradient: [measure=log10(dp),accuracy=log10(maxdis)] = "
-    + str([int(np.log10(dp)), int(np.log10(maxdis))])
-    + "\n"
-)
-txt.write("#payoff:u = " + str([uo_vc]) + ", v = " + str([vo_vc]) + "\n")
-txt.write("#strategies: one-memory vs zero-memory" + "\n")
-txt.write("#t_vc(1), x_vc(27), y(3), p_vc(9), ust(1), vst(1)" + "\n")
-
-xst1_vc, xst2_vc, xst3_vc = [], [], []
-yst1_vc, yst2_vc, yst3_vc = [], [], []
-ueqp_vc, veqp_vc = [], []
-for t in range(0, int(Tmax * NdT) + 1):
-    M_mt = M_MATRIX(x_vc, y_vc)
-    po_vc = EIGEN_VECTOR(M_mt)
-    xst1, xst2, xst3 = (
-        np.dot(x_vc[::3], po_vc),
-        np.dot(x_vc[1::3], po_vc),
-        np.dot(x_vc[2::3], po_vc),
+def main(x_vc, y_vc):
+    # output textfile
+    txt = open("dMMGA_310_test.txt", "w")
+    txt.write(
+        "#time:[Tmax,NdT] (Discretized Multi-memory Gradient Ascent) = "
+        + str([Tmax, NdT])
+        + "\n"
     )
-    yst1, yst2, yst3 = y_vc[0], y_vc[1], y_vc[2]
-    ueqo, veqo = np.dot(po_vc, u_vc), np.dot(po_vc, v_vc)
-    xst1_vc.append(xst1)
-    xst2_vc.append(xst2)
-    xst3_vc.append(xst3)
-    yst1_vc.append(yst1)
-    yst2_vc.append(yst2)
-    yst3_vc.append(yst3)
-    ueqp_vc.append(ueqo)
-    veqp_vc.append(veqo)
+    txt.write(
+        "#detailed of gradient: [measure=log10(dp),accuracy=log10(maxdis)] = "
+        + str([int(np.log10(dp)), int(np.log10(maxdis))])
+        + "\n"
+    )
+    txt.write("#payoff:u = " + str([uo_vc]) + ", v = " + str([vo_vc]) + "\n")
+    txt.write("#strategies: one-memory vs zero-memory" + "\n")
+    txt.write("#t_vc(1), x_vc(27), y(3), p_vc(9), ust(1), vst(1)" + "\n")
+    
+    xst1_vc, xst2_vc, xst3_vc = [], [], []
+    yst1_vc, yst2_vc, yst3_vc = [], [], []
+    ueqp_vc, veqp_vc = [], []
+    for t in range(0, int(Tmax * NdT) + 1):
+        M_mt = M_MATRIX(x_vc, y_vc)
+        po_vc = EIGEN_VECTOR(M_mt)
+        xst1, xst2, xst3 = (
+            np.dot(x_vc[::3], po_vc),
+            np.dot(x_vc[1::3], po_vc),
+            np.dot(x_vc[2::3], po_vc),
+        )
+        yst1, yst2, yst3 = y_vc[0], y_vc[1], y_vc[2]
+        ueqo, veqo = np.dot(po_vc, u_vc), np.dot(po_vc, v_vc)
+        xst1_vc.append(xst1)
+        xst2_vc.append(xst2)
+        xst3_vc.append(xst3)
+        yst1_vc.append(yst1)
+        yst2_vc.append(yst2)
+        yst3_vc.append(yst3)
+        ueqp_vc.append(ueqo)
+        veqp_vc.append(veqo)
+    
+        # write txt
+        txt.write(str(round(t / NdT, 4)) + "\t")
+        for l in range(0, 27):
+            txt.write(str(x_vc[l]) + "\t")
+        for l in range(0, 3):
+            txt.write(str(y_vc[l]) + "\t")
+        for l in range(0, 9):
+            txt.write(str(po_vc[l]) + "\t")
+        txt.write(str(ueqo) + "\t" + str(veqo) + "\n")
+    
+        dueq_vc = []
+        for j in range(0, 27):
+            xn_vc = np.copy(x_vc)
+            xn_vc[j] += dp
+            jmod3 = int(j / 3)
+            xn_vc[3 * jmod3 : 3 * (jmod3 + 1)] = xn_vc[
+                3 * jmod3 : 3 * (jmod3 + 1)
+            ] / np.sum(xn_vc[3 * jmod3 : 3 * (jmod3 + 1)])
+            M_mt = M_MATRIX(xn_vc, y_vc)
+            p_vc = EIGEN_VECTOR(M_mt)
+            dueq = (np.dot(p_vc, u_vc) - ueqo) / dp
+            dueq_vc.append(dueq)
+        dveq_vc = []
+        for j in range(0, 3):
+            yn_vc = np.copy(y_vc)
+            yn_vc[j] += dp
+            yn_vc = yn_vc / np.sum(yn_vc)
+            M_mt = M_MATRIX(x_vc, yn_vc)
+            p_vc = EIGEN_VECTOR(M_mt)
+            dveq = (np.dot(p_vc, v_vc) - veqo) / dp
+            dveq_vc.append(dveq)
+        x_vc += x_vc * dueq_vc / NdT
+        y_vc += y_vc * dveq_vc / NdT
+        x_vc = np.transpose(np.reshape(x_vc, (9, 3)))
+        x_vc = x_vc / np.sum(x_vc, axis=0)
+        x_vc = np.reshape(np.transpose(x_vc), (27))
+        y_vc = y_vc / np.sum(y_vc)
+        if t % (NdT * 10) == 0:
+            print(t / NdT)
+    
+    txt.close()
 
-    # write txt
-    txt.write(str(round(t / NdT, 4)) + "\t")
-    for l in range(0, 27):
-        txt.write(str(x_vc[l]) + "\t")
-    for l in range(0, 3):
-        txt.write(str(y_vc[l]) + "\t")
-    for l in range(0, 9):
-        txt.write(str(po_vc[l]) + "\t")
-    txt.write(str(ueqo) + "\t" + str(veqo) + "\n")
-
-    dueq_vc = []
-    for j in range(0, 27):
-        xn_vc = np.copy(x_vc)
-        xn_vc[j] += dp
-        jmod3 = int(j / 3)
-        xn_vc[3 * jmod3 : 3 * (jmod3 + 1)] = xn_vc[
-            3 * jmod3 : 3 * (jmod3 + 1)
-        ] / np.sum(xn_vc[3 * jmod3 : 3 * (jmod3 + 1)])
-        M_mt = M_MATRIX(xn_vc, y_vc)
-        p_vc = EIGEN_VECTOR(M_mt)
-        dueq = (np.dot(p_vc, u_vc) - ueqo) / dp
-        dueq_vc.append(dueq)
-    dveq_vc = []
-    for j in range(0, 3):
-        yn_vc = np.copy(y_vc)
-        yn_vc[j] += dp
-        yn_vc = yn_vc / np.sum(yn_vc)
-        M_mt = M_MATRIX(x_vc, yn_vc)
-        p_vc = EIGEN_VECTOR(M_mt)
-        dveq = (np.dot(p_vc, v_vc) - veqo) / dp
-        dveq_vc.append(dveq)
-    x_vc += x_vc * dueq_vc / NdT
-    y_vc += y_vc * dveq_vc / NdT
-    x_vc = np.transpose(np.reshape(x_vc, (9, 3)))
-    x_vc = x_vc / np.sum(x_vc, axis=0)
-    x_vc = np.reshape(np.transpose(x_vc), (27))
-    y_vc = y_vc / np.sum(y_vc)
-    if t % (NdT * 10) == 0:
-        print(t / NdT)
-
-txt.close()
+if __name__ == "__main__":
+    main(x_vc, y_vc)
