@@ -44,6 +44,7 @@ def M_MATRIX(x_vc, y):
     M_mt = np.append(M_mt, M4_mt, axis=0)
     return M_mt
 
+
 def main(x_vc, y):
     # output textfile
     txt = open("dMMGA_220_test.txt", "w")
@@ -60,7 +61,7 @@ def main(x_vc, y):
     txt.write("#payoff:u = " + str(uo_vc) + ", v = " + str(vo_vc) + "\n")
     txt.write("#strategies: two-memory vs zero-memory" + "\n")
     txt.write("#t_vc(1), x_vc(16), y(1), p_vc(16), ust(1), vst(1)" + "\n")
-    
+
     xst_vc, yst_vc = [], []
     ueqp_vc, veqp_vc = [], []
     for t in range(0, int(Tmax * NdT) + 1):
@@ -73,7 +74,7 @@ def main(x_vc, y):
         yst_vc.append(yst)
         ueqp_vc.append(ueqo)
         veqp_vc.append(veqo)
-    
+
         # write txt
         txt.write(str(round(t / NdT, 4)) + "\t")
         for l in range(0, 16):
@@ -82,7 +83,7 @@ def main(x_vc, y):
         for l in range(0, 16):
             txt.write(str(po_vc[l]) + "\t")
         txt.write(str(ueqo) + "\t" + str(veqo) + "\n")
-    
+
         dueq_vc = []
         for j in range(0, 16):
             xn_vc = np.copy(x_vc)
@@ -99,8 +100,9 @@ def main(x_vc, y):
         y += y * (1 - y) * dveq / NdT
         if t % (NdT * 10) == 0:
             print(t / NdT)
-    
+
     txt.close()
+
 
 if __name__ == "__main__":
     main(x_vc, y)

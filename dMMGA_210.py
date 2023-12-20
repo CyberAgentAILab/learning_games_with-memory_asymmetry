@@ -52,7 +52,7 @@ def main(x_vc, y):
     txt.write("#payoff:u = " + str(uo_vc) + ", v = " + str(vo_vc) + "\n")
     txt.write("#strategies: one-memory vs zero-memory" + "\n")
     txt.write("#t_vc(1), x_vc(4), y(1), p_vc(4), ust(1), vst(1)" + "\n")
-    
+
     xst_vc, yst_vc = [], []
     ueqp_vc, veqp_vc = [], []
     for t in range(0, int(Tmax * NdT) + 1):
@@ -64,7 +64,7 @@ def main(x_vc, y):
         yst_vc.append(y[0])
         ueqp_vc.append(ueqo)
         veqp_vc.append(veqo)
-    
+
         # write txt
         txt.write(str(round(t / NdT, 4)) + "\t")
         for l in range(0, 4):
@@ -73,7 +73,7 @@ def main(x_vc, y):
         for l in range(0, 4):
             txt.write(str(po_vc[l]) + "\t")
         txt.write(str(ueqo) + "\t" + str(veqo) + "\n")
-    
+
         dueq_vc = []
         for j in range(0, 4):
             xn_vc = np.copy(x_vc)
@@ -90,8 +90,9 @@ def main(x_vc, y):
         y += y * (1 - y) * dveq / NdT
         if t % (NdT * 10) == 0:
             print(t / NdT)
-    
+
     txt.close()
+
 
 if __name__ == "__main__":
     main(x_vc, y)

@@ -118,6 +118,7 @@ def SS_ANALYTICAL_R(x_vc, y):
     dx_vc = np.array([dx1, dx2, dx3, dx4])
     return (-dx_vc, -dy)
 
+
 def main(x_vc, y):
     # output textfile
     txt = open("cMMGA_210_test.txt", "w")
@@ -126,14 +127,13 @@ def main(x_vc, y):
     txt.write("#strategies: one-memory vs zero-memory" + "\n")
     txt.write("#whole dynamics from source to sink" + "\n")
     txt.write("#t, xT_vc(4), yT(1), u(1), v(1)" + "\n")
-    
-    
+
     xst = (x_vc[2] * y + x_vc[3] * (1 - y)) / (
         1 - x_vc[0] * y - x_vc[1] * (1 - y) + x_vc[2] * y + x_vc[3] * (1 - y)
     )
-    while ((xst - 0.5) ** 2 + (y - 0.5) ** 2) ** 0.5 > dmin or (1 - x_vc[0]) * x_vc[3] - (
-        1 - x_vc[1]
-    ) * x_vc[2] > 0:
+    while ((xst - 0.5) ** 2 + (y - 0.5) ** 2) ** 0.5 > dmin or (1 - x_vc[0]) * x_vc[
+        3
+    ] - (1 - x_vc[1]) * x_vc[2] > 0:
         # analytical
         # Runge-Kutta k
         dxk_vc, dyk = SS_ANALYTICAL(x_vc, y)
@@ -149,18 +149,18 @@ def main(x_vc, y):
         dx_vc, dy = (dxk_vc + 2 * dxl_vc + 2 * dxm_vc + dxn_vc) / 6, (
             dyk + 2 * dyl + 2 * dym + dyn
         ) / 6
-    
+
         x_vc += dx_vc / NdT
         y += dy / NdT
         xst = (x_vc[2] * y + x_vc[3] * (1 - y)) / (
             1 - x_vc[0] * y - x_vc[1] * (1 - y) + x_vc[2] * y + x_vc[3] * (1 - y)
         )
-    
+
     xf_vc = np.copy(x_vc)
-    
-    while ((xst - 0.5) ** 2 + (y - 0.5) ** 2) ** 0.5 > dmin or (1 - x_vc[0]) * x_vc[3] - (
-        1 - x_vc[1]
-    ) * x_vc[2] < 0:
+
+    while ((xst - 0.5) ** 2 + (y - 0.5) ** 2) ** 0.5 > dmin or (1 - x_vc[0]) * x_vc[
+        3
+    ] - (1 - x_vc[1]) * x_vc[2] < 0:
         # analytical
         # Runge-Kutta k
         dxk_vc, dyk = SS_ANALYTICAL_R(x_vc, y)
@@ -176,25 +176,26 @@ def main(x_vc, y):
         dx_vc, dy = (dxk_vc + 2 * dxl_vc + 2 * dxm_vc + dxn_vc) / 6, (
             dyk + 2 * dyl + 2 * dym + dyn
         ) / 6
-    
+
         x_vc += dx_vc / NdT
         y += dy / NdT
         xst = (x_vc[2] * y + x_vc[3] * (1 - y)) / (
             1 - x_vc[0] * y - x_vc[1] * (1 - y) + x_vc[2] * y + x_vc[3] * (1 - y)
         )
-    
-    
+
     t = 0.0
     x1_nor_vc, x2_nor_vc, x3_nor_vc, x4_nor_vc = [], [], [], []
     xst_nor_vc, y_nor_vc = [], []
-    while ((xst - 0.5) ** 2 + (y - 0.5) ** 2) ** 0.5 > dmin or (1 - x_vc[0]) * x_vc[3] - (
-        1 - x_vc[1]
-    ) * x_vc[2] > 0:
+    while ((xst - 0.5) ** 2 + (y - 0.5) ** 2) ** 0.5 > dmin or (1 - x_vc[0]) * x_vc[
+        3
+    ] - (1 - x_vc[1]) * x_vc[2] > 0:
         xst = (x_vc[2] * y + x_vc[3] * (1 - y)) / (
             1 - x_vc[0] * y - x_vc[1] * (1 - y) + x_vc[2] * y + x_vc[3] * (1 - y)
         )
-        pst_vc = np.reshape([xst * y, xst * (1 - y), (1 - xst) * y, (1 - xst) * (1 - y)], 4)
-    
+        pst_vc = np.reshape(
+            [xst * y, xst * (1 - y), (1 - xst) * y, (1 - xst) * (1 - y)], 4
+        )
+
         # write txt
         txt.write(str(round(t, 3)) + "\t")
         for l in range(0, 4):
@@ -202,14 +203,14 @@ def main(x_vc, y):
         txt.write(str(xst - 0.5) + "\t")
         txt.write(str(y - 0.5) + "\t")
         txt.write(str(np.dot(pst_vc, u_vc)) + "\t" + str(np.dot(pst_vc, v_vc)) + "\n")
-    
+
         x1_nor_vc.append(x_vc[0])
         x2_nor_vc.append(x_vc[1])
         x3_nor_vc.append(x_vc[2])
         x4_nor_vc.append(x_vc[3])
         xst_nor_vc.append(xst)
         y_nor_vc.append(y)
-    
+
         # analytical
         # Runge-Kutta k
         dxk_vc, dyk = SS_ANALYTICAL(x_vc, y)
@@ -225,15 +226,14 @@ def main(x_vc, y):
         dx_vc, dy = (dxk_vc + 2 * dxl_vc + 2 * dxm_vc + dxn_vc) / 6, (
             dyk + 2 * dyl + 2 * dym + dyn
         ) / 6
-    
+
         x_vc += dx_vc / NdT
         y += dy / NdT
         t += 1.0 / NdT
         xst = (x_vc[2] * y + x_vc[3] * (1 - y)) / (
             1 - x_vc[0] * y - x_vc[1] * (1 - y) + x_vc[2] * y + x_vc[3] * (1 - y)
         )
-    
-    
+
     # write txt
     txt.write(str(round(t, 3)) + "\t")
     for l in range(0, 4):
@@ -242,9 +242,10 @@ def main(x_vc, y):
     txt.write(str(y - 0.5) + "\t")
     txt.write(str(np.dot(pst_vc, u_vc)) + "\t" + str(np.dot(pst_vc, v_vc)) + "\n")
     txt.close()
-    
+
     if np.sum((x_vc - xf_vc) ** 2) ** 0.5 < dmin:
         print("consistent!")
+
 
 if __name__ == "__main__":
     main(x_vc, y)

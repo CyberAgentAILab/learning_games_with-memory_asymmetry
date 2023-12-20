@@ -62,6 +62,7 @@ def EIGEN_VECTOR(M_mt):
         p_vc = pn_vc
     return p_vc
 
+
 # matrix generation
 def M_MATRIX(x_vc, y_vc):
     M_mt = np.array([])
@@ -70,6 +71,7 @@ def M_MATRIX(x_vc, y_vc):
         M_mt = np.append(M_mt, m_vc)
     M_mt = np.transpose(np.reshape(M_mt, (9, 9)))
     return M_mt
+
 
 def main(x_vc, y_vc):
     # output textfile
@@ -87,7 +89,7 @@ def main(x_vc, y_vc):
     txt.write("#payoff:u = " + str([uo_vc]) + ", v = " + str([vo_vc]) + "\n")
     txt.write("#strategies: one-memory vs zero-memory" + "\n")
     txt.write("#t_vc(1), x_vc(27), y(3), p_vc(9), ust(1), vst(1)" + "\n")
-    
+
     xst1_vc, xst2_vc, xst3_vc = [], [], []
     yst1_vc, yst2_vc, yst3_vc = [], [], []
     ueqp_vc, veqp_vc = [], []
@@ -109,7 +111,7 @@ def main(x_vc, y_vc):
         yst3_vc.append(yst3)
         ueqp_vc.append(ueqo)
         veqp_vc.append(veqo)
-    
+
         # write txt
         txt.write(str(round(t / NdT, 4)) + "\t")
         for l in range(0, 27):
@@ -119,7 +121,7 @@ def main(x_vc, y_vc):
         for l in range(0, 9):
             txt.write(str(po_vc[l]) + "\t")
         txt.write(str(ueqo) + "\t" + str(veqo) + "\n")
-    
+
         dueq_vc = []
         for j in range(0, 27):
             xn_vc = np.copy(x_vc)
@@ -149,8 +151,9 @@ def main(x_vc, y_vc):
         y_vc = y_vc / np.sum(y_vc)
         if t % (NdT * 10) == 0:
             print(t / NdT)
-    
+
     txt.close()
+
 
 if __name__ == "__main__":
     main(x_vc, y_vc)

@@ -72,6 +72,7 @@ def M_MATRIX(x_vc, y_vc):
     M_mt = np.transpose(np.reshape(M_mt, (16, 16)))
     return M_mt
 
+
 def main(x_vc, y_vc):
     # output textfile
     txt = open("dMMGA_410_test.txt", "w")
@@ -89,7 +90,7 @@ def main(x_vc, y_vc):
     txt.write("#payoff:v = " + str([vo_vc]) + "\n")
     txt.write("#strategies: one-memory vs zero-memory" + "\n")
     txt.write("#t_vc(1), x_vc(64), y(4), p_vc(16), ust(1), vst(1)" + "\n")
-    
+
     xst1_vc, xst2_vc, xst3_vc, xst4_vc = [], [], [], []
     yst1_vc, yst2_vc, yst3_vc, yst4_vc = [], [], [], []
     ueqp_vc, veqp_vc = [], []
@@ -114,7 +115,7 @@ def main(x_vc, y_vc):
         yst4_vc.append(yst4)
         ueqp_vc.append(ueqo)
         veqp_vc.append(veqo)
-    
+
         # write txt
         txt.write(str(round(t / NdT, 4)) + "\t")
         for l in range(0, 64):
@@ -124,7 +125,7 @@ def main(x_vc, y_vc):
         for l in range(0, 16):
             txt.write(str(po_vc[l]) + "\t")
         txt.write(str(ueqo) + "\t" + str(veqo) + "\n")
-    
+
         dueq_vc = []
         for j in range(0, 64):
             xn_vc = np.copy(x_vc)
@@ -154,8 +155,9 @@ def main(x_vc, y_vc):
         y_vc = y_vc / np.sum(y_vc)
         if t % (NdT * 10) == 0:
             print(t / NdT)
-    
+
     txt.close()
+
 
 if __name__ == "__main__":
     main(x_vc, y_vc)
