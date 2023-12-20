@@ -10,13 +10,13 @@ import numpy as np
 
 NdT = 200
 init = 1  # 1: random initial state, 2: neighborhood of Nash equilibrium
-if init == 0:
+if init == 1:
     x_vc, y = np.random.random(4), np.random.random()
-elif init == 1:
+elif init == 2:
     scale = 0.1
     x_vc, y = 0.5 + scale * np.random.randn(4), 0.5 + scale * np.random.randn()
 u_vc, v_vc = np.array([+1, -1, -1, +1]), np.array([-1, +1, +1, -1])
-dmin = 10**-8
+dmin = 10**-4
 
 
 # define function (analytically calculate equilibrium state for fixed strategy)
@@ -117,7 +117,7 @@ def SS_ANALYTICAL_R(x_vc, y):
     dx_vc = np.array([dx1, dx2, dx3, dx4])
     return (-dx_vc, -dy)
 
-def main():
+def main(x_vc, y):
     # output textfile
     txt = open("cMMGA_210_test.txt", "w")
     txt.write("#time:[NdT] (Runge-Kutta 4) = " + str([NdT]) + "\n")
@@ -246,4 +246,4 @@ def main():
         print("consistent!")
 
 if __name__ == "__main__":
-    main()
+    main(x_vc, y)
